@@ -1,5 +1,5 @@
 
-from typing import List
+from typing import List, Tuple
 
 from src.vol_surface import VolSurface, create_vol_surface_evolution_video
 from src.contracts import Option, Stock
@@ -22,6 +22,10 @@ def build_portfolio(underlying_price: float, portfolio_options: List[dict]):
         options_list.append(opt)
     return Portfolio(options=options_list, stock=underlying)
 
+
+def calc_s_range(underlying_price: float) -> Tuple[float, float]:
+    return (underlying_price*0.8, underlying_price*1.2)
+    
 def plot_value_evolution(portfolio: Portfolio,
                          vol_surface: VolSurface,
                          new_atm_vols,

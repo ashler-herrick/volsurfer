@@ -11,6 +11,7 @@ from portfolio import (
     plot_all_greeks,
 )
 from src.vol_surface import VolSurface, create_vol_surface_evolution_video
+from src.contracts import set_risk_free_rate
 
 st.set_page_config(layout="centered")
 st.title("Vol Surfer")
@@ -20,7 +21,7 @@ if "portfolio_options" not in st.session_state:
     st.session_state["portfolio_options"] = []
 
 # --- User inputs for Underlying Price & DTEs ---
-underlying_price = st.number_input("Underlying Stock Price", min_value=0.0, max_value=200.0, value=100.0)
+underlying_price = st.number_input("Underlying Stock Price", min_value=0.0, max_value=1000.0, value=100.0)
 dtes_input = st.text_input("DTEs (days)", "")
 dtes = parse_csv(dtes_input)
 
@@ -50,10 +51,14 @@ st.sidebar.title("Vol Surface and Simulation Parameters")
 with st.sidebar.expander("Underlying & Simulation Parameters", expanded=True):
     elapsed_time = st.slider("Elapsed Time (days)", min_value=0.1, max_value=60.0, value=10.0, step=0.1)
     timesteps = st.slider("Timesteps", min_value=1, max_value=30, value=10)
-    S_min = st.number_input("Min Underlying Price", min_value=50.0, max_value=150.0, value=80.0)
-    S_max = st.number_input("Max Underlying Price", min_value=80.0, max_value=200.0, value=120.0)
+
+    s_min_init, s_max_init = (underlying_price * 0.8, underlying_price * 1.2)
+    S_min = st.number_input("Min Underlying Price", min_value=0.0, max_value=2000.0, value=s_min_init)
+    S_max = st.number_input("Max Underlying Price", min_value=0.0, max_value=2000.0, value=s_max_init)
     S_points = st.slider("Number of Price Steps", min_value=5, max_value=50, value=20)
     S_range = np.linspace(S_min, S_max, S_points)
+    rfr = st.number_input("Risk Free Rate", min_value=0.0, max_value=0.1, value=0.04)
+    set_risk_free_rate(rfr)
 
 with st.sidebar.expander("Current Vol Surface"):
     atm_vols_input = st.text_input("ATM Vols", "")
