@@ -1,9 +1,9 @@
 
 from typing import List
 
-from volsurfer.app.src.vol_surface import VolSurface, create_vol_surface_evolution_video
-from volsurfer.app.src.contracts import Option, Stock
-from volsurfer.app.src.portfolio import Portfolio
+from src.vol_surface import VolSurface, create_vol_surface_evolution_video
+from src.contracts import Option, Stock
+from src.portfolio import Portfolio
 
 def build_portfolio(underlying_price: float, portfolio_options: List[dict]):
     """
