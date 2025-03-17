@@ -686,17 +686,16 @@ wheels = [
 
 [[package]]
 name = "py-lets-be-rational"
-version = "1.0.1"
-source = { registry = "https://pypi.org/simple" }
+version = "1.0.3"
+source = { git = "https://github.com/vollib/py_lets_be_rational.git#b85a0d87fe2ba6d0525c76ee936999599deb39d7" }
 dependencies = [
     { name = "numpy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/58/bf/b292f35a4a2f0c02f4926442bd04d24c2a509749fb5e8e52190ac7ae3731/py_lets_be_rational-1.0.1.tar.gz", hash = "sha256:0e0788a4109e102a666f26d67276c0d3c2feb8a059e788354a90e565f2db0ed2", size = 18363 }
 
 [[package]]
 name = "py-vollib"
-version = "1.0.1"
-source = { registry = "https://pypi.org/simple" }
+version = "1.0.3"
+source = { git = "https://github.com/vollib/py_vollib.git#9fbc623dbc8d7241b935da440a722b49186b9bb1" }
 dependencies = [
     { name = "numpy" },
     { name = "pandas" },
@@ -704,7 +703,6 @@ dependencies = [
     { name = "scipy" },
     { name = "simplejson" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b0/3c/26bd8cbaab3bd004a44157675fa8fe135f95fd4c62898c60c1670c339ba7/py_vollib-1.0.1.tar.gz", hash = "sha256:36e752eee16dcf52994c42aaf5372f0ab9cfd0d2aedc5462c4c1b6123c9ecf20", size = 19197 }
 
 [[package]]
 name = "pyarrow"
@@ -1121,8 +1119,8 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.1" },
     { name = "numpy", specifier = ">=2.2.4" },
     { name = "pandas", specifier = ">=2.2.3" },
-    { name = "py-lets-be-rational", specifier = ">=1.0.1" },
-    { name = "py-vollib", specifier = ">=1.0.1" },
+    { name = "py-lets-be-rational", git = "https://github.com/vollib/py_lets_be_rational.git" },
+    { name = "py-vollib", git = "https://github.com/vollib/py_vollib.git" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "python-test", specifier = ">=1.0.4" },
     { name = "streamlit", specifier = ">=1.43.2" },
