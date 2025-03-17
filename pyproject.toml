@@ -9,6 +9,7 @@ dependencies = [
     "matplotlib>=3.10.1",
     "numpy>=2.2.4",
     "pandas>=2.2.3",
+    "py-lets-be-rational>=1.0.1",
     "py-vollib>=1.0.1",
     "pytest>=8.3.5",
     "python-test>=1.0.4",
