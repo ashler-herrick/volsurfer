@@ -1,0 +1,28 @@
+[project]
+name = "volsurfer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ashler-herrick", email = "124288133+ashler-herrick@users.noreply.github.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "imageio[ffmpeg,libx264,pyav]>=2.37.0",
+    "matplotlib>=3.10.1",
+    "numpy>=2.2.3",
+    "py-vollib>=1.0.1",
+    "streamlit>=1.43.2",
+]
+
+[project.scripts]
+volsurfer = "volsurfer:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
