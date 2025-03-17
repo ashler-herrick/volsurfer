@@ -56,7 +56,11 @@ class VolSurface:
         dte_range:    Array of expiries (in years, e.g., np.linspace(0.01, 0.5, 40)).
         """
         dte_range = np.linspace(np.min(self.dtes), np.max(self.dtes), 40)
-        strike_range = np.linspace(int(self.atm_strike - .5 * self.atm_strike), int(self.atm_strike + .5 * self.atm_strike), 40)
+        strike_range = np.linspace(
+            int(self.atm_strike - 0.5 * self.atm_strike),
+            int(self.atm_strike + 0.5 * self.atm_strike),
+            40,
+        )
         # Create a meshgrid for strikes and expiries
         X, Y = np.meshgrid(strike_range, dte_range)
         Z = np.empty_like(X)
@@ -66,7 +70,6 @@ class VolSurface:
             for j in range(X.shape[1]):
                 Z[i, j] = self.vol(X[i, j], Y[i, j])
 
-        
         fig = plt.figure(figsize=(8, 6), dpi=128)
         ax = cast(Axes3D, fig.add_subplot(111, projection="3d"))
         surf = ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor="gray", alpha=0.6)
@@ -117,27 +120,27 @@ class VolSurface:
             )
 
 
-def create_vol_surface_evolution_video(vol_surface: VolSurface,
-                                       timesteps: int,
-                                       new_atm_vols,
-                                       new_skews,
-                                       new_kurtosis) -> List:
+def create_vol_surface_evolution_video(
+    vol_surface: VolSurface, timesteps: int, new_atm_vols, new_skews, new_kurtosis
+) -> List:
     """
     Evolve the vol_surface, generate a 3D plot for each step, and combine them into an MP4 video.
     Returns the video as bytes.
     """
     frames = []
-    
-    for evolved_surface in vol_surface.evolve(timesteps, new_atm_vols, new_skews, new_kurtosis):
+
+    for evolved_surface in vol_surface.evolve(
+        timesteps, new_atm_vols, new_skews, new_kurtosis
+    ):
         # Create the figure (ensure your plot_surface returns a Figure)
         fig = evolved_surface.plot_surface()
-        
+
         # Save figure to an in-memory buffer
         buf = BytesIO()
         fig.savefig(buf, format="png", dpi=128)
         buf.seek(0)
         plt.close(fig)
-        
+
         # Read buffer into an image array (for imageio)
         frame = imageio.v2.imread(buf)
         # Convert RGBA to RGB if necessary
@@ -145,6 +148,8 @@ def create_vol_surface_evolution_video(vol_surface: VolSurface,
             frame = frame[..., :3]
         frames.append(frame)
     if len(frames) < 2:
-        raise ValueError("Error generated vol surface frames. Less than 2 frames found.")
-    
+        raise ValueError(
+            "Error generated vol surface frames. Less than 2 frames found."
+        )
+
     return frames

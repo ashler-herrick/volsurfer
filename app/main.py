@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -21,20 +20,24 @@ if "portfolio_options" not in st.session_state:
     st.session_state["portfolio_options"] = []
 
 # --- User inputs for Underlying Price & DTEs ---
-underlying_price = st.number_input("Underlying Stock Price", min_value=0.0, max_value=1000.0, value=100.0)
+underlying_price = st.number_input(
+    "Underlying Stock Price", min_value=0.0, max_value=1000.0, value=100.0
+)
 dtes_input = st.text_input("DTEs (days)", "")
 dtes = parse_csv(dtes_input)
 
 st.header("Add Options to Portfolio")
 submitted, flag, strike, dte, pos = add_option_form(dtes)
 if submitted:
-    st.session_state["portfolio_options"].append({
-        "flag": "c" if flag == "Call" else "p",
-        "strike": strike,
-        "dte_days": dte,
-        "pos": pos,
-        "underlying_price": underlying_price,
-    })
+    st.session_state["portfolio_options"].append(
+        {
+            "flag": "c" if flag == "Call" else "p",
+            "strike": strike,
+            "dte_days": dte,
+            "pos": pos,
+            "underlying_price": underlying_price,
+        }
+    )
 
 st.subheader("Current Portfolio Options")
 if st.session_state["portfolio_options"]:
@@ -49,12 +52,18 @@ remove_option_ui("portfolio_options")
 st.sidebar.title("Vol Surface and Simulation Parameters")
 
 with st.sidebar.expander("Underlying & Simulation Parameters", expanded=True):
-    elapsed_time = st.slider("Elapsed Time (days)", min_value=0.1, max_value=60.0, value=10.0, step=0.1)
+    elapsed_time = st.slider(
+        "Elapsed Time (days)", min_value=0.1, max_value=60.0, value=10.0, step=0.1
+    )
     timesteps = st.slider("Timesteps", min_value=1, max_value=30, value=10)
 
     s_min_init, s_max_init = (underlying_price * 0.8, underlying_price * 1.2)
-    S_min = st.number_input("Min Underlying Price", min_value=0.0, max_value=2000.0, value=s_min_init)
-    S_max = st.number_input("Max Underlying Price", min_value=0.0, max_value=2000.0, value=s_max_init)
+    S_min = st.number_input(
+        "Min Underlying Price", min_value=0.0, max_value=2000.0, value=s_min_init
+    )
+    S_max = st.number_input(
+        "Max Underlying Price", min_value=0.0, max_value=2000.0, value=s_max_init
+    )
     S_points = st.slider("Number of Price Steps", min_value=5, max_value=50, value=20)
     S_range = np.linspace(S_min, S_max, S_points)
     rfr = st.number_input("Risk Free Rate", min_value=0.0, max_value=0.1, value=0.04)
@@ -72,7 +81,7 @@ with st.sidebar.expander("Future Vol Surface (Optional)"):
     new_atm_vols_input = st.text_input("New ATM Vols", "")
     new_skews_input = st.text_input("New Skews", "")
     new_kurtosis_input = st.text_input("New Kurtosis", "")
-    
+
     new_atm_vols = parse_csv(new_atm_vols_input) or atm_vols
     new_skews = parse_csv(new_skews_input) or skews
     new_kurtosis = parse_csv(new_kurtosis_input) or kurtosis
@@ -91,8 +100,14 @@ with btn3:
 # --- Plot Value Evolution ---
 if plot_value_btn:
     portfolio = build_portfolio(underlying_price, st.session_state["portfolio_options"])
-    vol_surface = VolSurface(atm_strike=underlying_price, dtes=dtes, atm_vols=atm_vols, skews=skews, kurtosis=kurtosis)
-    
+    vol_surface = VolSurface(
+        atm_strike=underlying_price,
+        dtes=dtes,
+        atm_vols=atm_vols,
+        skews=skews,
+        kurtosis=kurtosis,
+    )
+
     st.header("3D Portfolio Evolution: Value")
     fig = plot_value_evolution(
         portfolio,
@@ -102,15 +117,21 @@ if plot_value_btn:
         new_kurtosis,
         elapsed_time,
         timesteps,
-        S_range
+        S_range,
     )
     st.pyplot(fig, use_container_width=True)
 
 # --- Plot Greek Evolution ---
 if plot_greek_btn:
     portfolio = build_portfolio(underlying_price, st.session_state["portfolio_options"])
-    vol_surface = VolSurface(atm_strike=underlying_price, dtes=dtes, atm_vols=atm_vols, skews=skews, kurtosis=kurtosis)
-    
+    vol_surface = VolSurface(
+        atm_strike=underlying_price,
+        dtes=dtes,
+        atm_vols=atm_vols,
+        skews=skews,
+        kurtosis=kurtosis,
+    )
+
     st.header("3D Portfolio Evolution: All Greeks")
     figs = plot_all_greeks(
         portfolio,
@@ -120,7 +141,7 @@ if plot_greek_btn:
         new_kurtosis,
         elapsed_time,
         timesteps,
-        S_range
+        S_range,
     )
 
     tab1, tab2, tab3, tab4 = st.tabs(["Delta", "Gamma", "Theta", "Vega"])
@@ -135,9 +156,17 @@ if plot_greek_btn:
 
 # --- Animate Vol Surface ---
 if plot_volsurf_btn:
-    vol_surface = VolSurface(atm_strike=underlying_price, dtes=dtes, atm_vols=atm_vols, skews=skews, kurtosis=kurtosis)
-    frames = create_vol_surface_evolution_video(vol_surface, timesteps, new_atm_vols, new_skews, new_kurtosis)
-    
+    vol_surface = VolSurface(
+        atm_strike=underlying_price,
+        dtes=dtes,
+        atm_vols=atm_vols,
+        skews=skews,
+        kurtosis=kurtosis,
+    )
+    frames = create_vol_surface_evolution_video(
+        vol_surface, timesteps, new_atm_vols, new_skews, new_kurtosis
+    )
+
     # Example: writing frames to a file, or display as video
     video_filename = "vol_surface.mp4"
     imageio.mimwrite(video_filename, frames, fps=2)

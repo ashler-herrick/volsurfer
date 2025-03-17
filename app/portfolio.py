@@ -1,9 +1,9 @@
-
 from typing import List, Tuple
 
 from src.vol_surface import VolSurface, create_vol_surface_evolution_video
 from src.contracts import Option, Stock
 from src.portfolio import Portfolio
+
 
 def build_portfolio(underlying_price: float, portfolio_options: List[dict]):
     """
@@ -24,16 +24,19 @@ def build_portfolio(underlying_price: float, portfolio_options: List[dict]):
 
 
 def calc_s_range(underlying_price: float) -> Tuple[float, float]:
-    return (underlying_price*0.8, underlying_price*1.2)
-    
-def plot_value_evolution(portfolio: Portfolio,
-                         vol_surface: VolSurface,
-                         new_atm_vols,
-                         new_skews,
-                         new_kurtosis,
-                         elapsed_time,
-                         timesteps,
-                         S_range):
+    return (underlying_price * 0.8, underlying_price * 1.2)
+
+
+def plot_value_evolution(
+    portfolio: Portfolio,
+    vol_surface: VolSurface,
+    new_atm_vols,
+    new_skews,
+    new_kurtosis,
+    elapsed_time,
+    timesteps,
+    S_range,
+):
     """Calls the portfolio's 3D value evolution plot and returns the figure."""
     fig = portfolio.plot_value_evolution_3d(
         vol_surface,
@@ -46,14 +49,17 @@ def plot_value_evolution(portfolio: Portfolio,
     )
     return fig
 
-def plot_all_greeks(portfolio: Portfolio,
-                    vol_surface: VolSurface,
-                    new_atm_vols,
-                    new_skews,
-                    new_kurtosis,
-                    elapsed_time,
-                    timesteps,
-                    S_range):
+
+def plot_all_greeks(
+    portfolio: Portfolio,
+    vol_surface: VolSurface,
+    new_atm_vols,
+    new_skews,
+    new_kurtosis,
+    elapsed_time,
+    timesteps,
+    S_range,
+):
     """Plot 3D evolution of delta, gamma, theta, vega, one after another."""
     figs = {}
     for greek_name in ["delta", "gamma", "theta", "vega"]:

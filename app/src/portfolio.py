@@ -158,7 +158,9 @@ class Portfolio:
         time_axis = np.linspace(0, elapsed_time, timesteps)
         # Create meshgrid with X as underlying price and Y as time (days)
         S_mesh, T = np.meshgrid(S_range, time_axis)
-        evolution_matrix_T = evolution_matrix.T  # Transpose to match meshgrid dimensions
+        evolution_matrix_T = (
+            evolution_matrix.T
+        )  # Transpose to match meshgrid dimensions
 
         fig = plt.figure(figsize=(8, 6), dpi=128)
         # Create a 3D subplot using the recommended API:
