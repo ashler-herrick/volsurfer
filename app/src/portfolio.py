@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from volsurfer.app.src.vol_surface import VolSurface
-from volsurfer.app.src.contracts import Option, Stock
+from src.vol_surface import VolSurface
+from src.contracts import Option, Stock
 
 
 class Portfolio:

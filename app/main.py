@@ -10,7 +10,7 @@ from portfolio import (
     plot_value_evolution,
     plot_all_greeks,
 )
-from app.src.vol_surface import VolSurface, create_vol_surface_evolution_video
+from src.vol_surface import VolSurface, create_vol_surface_evolution_video
 
 st.set_page_config(layout="centered")
 st.title("Vol Surfer")
