@@ -23,7 +23,7 @@ if "portfolio_options" not in st.session_state:
 underlying_price = st.number_input(
     "Underlying Stock Price", min_value=0.0, max_value=1000.0, value=100.0
 )
-dtes_input = st.text_input("DTEs (days)", "")
+dtes_input = st.text_input("DTEs (days)", "7")
 dtes = parse_csv(dtes_input)
 
 st.header("Add Options to Portfolio")
