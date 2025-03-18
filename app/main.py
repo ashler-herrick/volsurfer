@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import imageio
+from st_aggrid import AgGrid, GridOptionsBuilder
 
 from ui import parse_csv, add_option_form, remove_option_ui
 from portfolio import (
@@ -13,7 +14,8 @@ from src.vol_surface import VolSurface, create_vol_surface_evolution_video
 from src.contracts import set_risk_free_rate
 
 st.set_page_config(layout="centered")
-st.title("Vol Surfer")
+st.title("Vol Surfer - An Options Calculator")
+st.image(r"app\assets\logo.png")
 
 # Session state initialization
 if "portfolio_options" not in st.session_state:
@@ -23,22 +25,75 @@ if "portfolio_options" not in st.session_state:
 underlying_price = st.number_input(
     "Underlying Stock Price", min_value=0.0, max_value=1000.0, value=100.0
 )
-dtes_input = st.text_input("DTEs (days)", "")
+dtes_input = st.text_input("DTEs (days)", "7, 14")
 dtes = parse_csv(dtes_input)
 
-st.header("Add Options to Portfolio")
-submitted, flag, strike, dte, pos = add_option_form(dtes)
-if submitted:
-    st.session_state["portfolio_options"].append(
-        {
-            "flag": "c" if flag == "Call" else "p",
-            "strike": strike,
-            "dte_days": dte,
-            "pos": pos,
+# Create two main tabs: one for manual entry and one for chain selection.
+tab_manual, tab_chain = st.tabs(["Manual Entry", "Select from Chain"])
+
+# --- Manual Entry Tab ---
+with tab_manual:
+    submitted, flag, strike, dte, pos = add_option_form(dtes)
+    if submitted:
+        st.session_state["portfolio_options"].append(
+            {
+                "flag": "c" if flag == "Call" else "p",
+                "strike": strike,
+                "dte_days": dte,
+                "pos": pos,
+                "underlying_price": underlying_price,
+            }
+        )
+        st.success("Option added to portfolio!")
+
+# --- Select from Chain Tab ---
+with tab_chain:
+    st.subheader("Select Option from Chain")
+    # For demonstration, we simulate a chain dictionary.
+    # Replace this with your actual Chain object as needed.
+    strikes = np.linspace(underlying_price * 0.8, underlying_price * 1.2, 5)
+    chain = {
+        (d, s, f): {
+            "flag": f,
+            "strike": s,
+            "dte_days": d,
+            "pos": 1,  # default position, can be adjusted
             "underlying_price": underlying_price,
         }
-    )
+        for d in dtes for s in strikes for f in ["c", "p"]
+    }
 
+    # Create subtabs for each DTE
+    dte_tabs = st.tabs([f"DTE: {d}" for d in dtes])
+    for i, d in enumerate(dtes):
+        with dte_tabs[i]:
+            st.write(f"Available Options for DTE: {d}")
+            # Filter the chain for this DTE
+            options_for_dte = {key: val for key, val in chain.items() if key[0] == d}
+
+            if options_for_dte:
+                # Display available options in a table for reference
+                options_df = pd.DataFrame(
+                    [{"Strike": key[1], "Flag": key[2]} for key in options_for_dte.keys()]
+                )
+                gb = GridOptionsBuilder.from_dataframe(options_df)
+                gb.configure_selection('single', use_checkbox=True)
+                grid_options = gb.build()
+
+                grid_response = AgGrid(options_df, gridOptions=grid_options, height=200, fit_columns_on_grid_load=True)
+
+                selected_rows = grid_response.get("selected_rows", [])
+                if selected_rows and st.button("Add Selected Options to Portfolio"):
+                    # Initialize session state portfolio if needed
+                    if "portfolio_options" not in st.session_state:
+                        st.session_state["portfolio_options"] = []
+                        
+                    # Add each selected row (option) to the portfolio
+                    for row in selected_rows:
+                        st.session_state["portfolio_options"].append(row)
+                    st.success(f"Added {len(selected_rows)} options to portfolio!")
+
+# --- Display current portfolio options ---
 st.subheader("Current Portfolio Options")
 if st.session_state["portfolio_options"]:
     df = pd.DataFrame(st.session_state["portfolio_options"])
@@ -87,7 +142,7 @@ with st.sidebar.expander("Future Vol Surface (Optional)"):
     new_kurtosis = parse_csv(new_kurtosis_input) or kurtosis
 
 # --- Buttons for Plotting ---
-btn1, btn2, btn3 = st.columns(3)
+btn1, btn2, btn3, btn4 = st.columns(4)
 with btn1:
     plot_value_btn = st.button("Plot Value Evolution")
 
@@ -95,7 +150,10 @@ with btn2:
     plot_greek_btn = st.button("Plot Greek Evolution")
 
 with btn3:
-    plot_volsurf_btn = st.button("Animate Vol Surface")
+    plot_volsurf_btn = st.button("Plot Vol Surface")
+
+with btn4:
+    animate_volsurf_btn = st.button("Animate Vol Surface Evolution")
 
 # --- Plot Value Evolution ---
 if plot_value_btn:
@@ -154,8 +212,20 @@ if plot_greek_btn:
     with tab4:
         st.pyplot(figs["vega"])
 
-# --- Animate Vol Surface ---
+# --- Plot Vol Surface ---
 if plot_volsurf_btn:
+    vol_surface = VolSurface(
+        atm_strike=underlying_price,
+        dtes=dtes,
+        atm_vols=atm_vols,
+        skews=skews,
+        kurtosis=kurtosis,
+    )
+    fig = vol_surface.plot_surface()
+    st.pyplot(fig)
+
+# --- Animate Vol Surface ---
+if animate_volsurf_btn:
     vol_surface = VolSurface(
         atm_strike=underlying_price,
         dtes=dtes,

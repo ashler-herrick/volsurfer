@@ -13,6 +13,7 @@ dependencies = [
     "py-vollib",
     "pytest>=8.3.5",
     "python-test>=1.0.4",
+    "streamlit-aggrid>=1.1.2",
     "streamlit>=1.43.2",
 ]
 
