@@ -15,11 +15,13 @@ def init_session_state(key, default):
         st.session_state[key] = default
     return st.session_state[key]
 
+
 def init_session_state_csv(key, default=""):
     if key not in st.session_state:
         st.session_state[key] = default
     arr = st.session_state[key]
     return ", ".join(str(x) for x in arr)
+
 
 def add_option_form(dtes: List):
     """Renders a form to add an option, returns True if submitted."""

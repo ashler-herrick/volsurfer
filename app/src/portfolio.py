@@ -99,7 +99,6 @@ class Portfolio:
         evolved_surfaces = list(
             vol_surface.evolve(timesteps, new_atm_vols, new_skews, new_kurtosis)
         )
-
         # For each step, build a new Portfolio
         for step, surface in enumerate(evolved_surfaces):
             # Create new option objects with updated DTE
@@ -124,7 +123,7 @@ class Portfolio:
             # Yield the new portfolio and the corresponding evolved surface
             yield new_portfolio, surface
 
-    def plot_value_evolution_3d(
+    def plot_pnl_evolution_3d(
         self,
         vol_surface: VolSurface,
         new_atm_vols: List[float],
@@ -134,14 +133,17 @@ class Portfolio:
         timesteps: int,
         s_range: np.ndarray,
     ):
-        # Create a matrix to store portfolio values:
-        evolution_matrix = np.zeros((len(s_range), timesteps))
+        # Create a matrix to store PnL values:
+        pnl_matrix = np.zeros((len(s_range), timesteps))
         original_price = self.stock.price
 
+        # Compute the initial portfolio value and determine the offset based on its sign:
+        init_value = self.portfolio_value(vol_surface)
         for i, S in enumerate(s_range):
             self.stock.price = S
-            values = []
-            # Use the generator version of evolve_portfolio which yields a new portfolio and evolved vol surface at each step.
+            pnl_values = []
+
+            # Generate new portfolio states and calculate PnL
             for new_port, new_vol in self.evolve_portfolio(
                 vol_surface,
                 new_atm_vols,
@@ -150,29 +152,35 @@ class Portfolio:
                 elapsed_time,
                 timesteps,
             ):
-                values.append(new_port.portfolio_value(new_vol))
-            evolution_matrix[i, :] = values
+                pnl_values.append(new_port.portfolio_value(new_vol) - init_value)
 
+            pnl_matrix[i, :] = pnl_values
         self.stock.price = original_price  # Reset underlying price
 
         time_axis = np.linspace(0, elapsed_time, timesteps)
-        # Create meshgrid with X as underlying price and Y as time (days)
         S_mesh, T = np.meshgrid(s_range, time_axis)
-        evolution_matrix_T = (
-            evolution_matrix.T
-        )  # Transpose to match meshgrid dimensions
-
+        pnl_matrix_T = pnl_matrix.T  # Transpose to match meshgrid dimensions
         fig = plt.figure(figsize=(8, 6), dpi=128)
-        # Create a 3D subplot using the recommended API:
         ax = cast(Axes3D, fig.add_subplot(111, projection="3d"))
         surf = ax.plot_surface(
-            S_mesh, T, evolution_matrix_T, cmap="viridis", edgecolor="none", alpha=0.8
+            S_mesh,
+            T,
+            pnl_matrix_T,
+            cmap="RdYlGn",
+            edgecolor="none",
+            alpha=0.8,
+            vmin=np.min(pnl_matrix),
+            vmax=np.max(pnl_matrix),  # Ensure correct color scaling
         )
+
+        ax.set_zlim(np.min(pnl_matrix), np.max(pnl_matrix))
+        ax.set_ylim(np.min(T), np.max(T))
         ax.set_xlabel("Underlying Price")
         ax.set_ylabel("Time (days)")
-        ax.set_zlabel("Portfolio Value")
+        ax.set_zlabel("PnL")
         ax.view_init(elev=30, azim=-45)
-        ax.set_title("3D Evolution of Portfolio Value")
+        ax.set_title("3D Evolution of Portfolio PnL")
+
         fig.colorbar(surf, shrink=0.5, aspect=5)
         return fig
 

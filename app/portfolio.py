@@ -23,7 +23,7 @@ def build_portfolio(underlying_price: float, portfolio_options: List[dict]):
     return Portfolio(options=options_list, stock=underlying)
 
 
-def plot_value_evolution(
+def plot_pnl_evolution(
     portfolio: Portfolio,
     vol_surface: VolSurface,
     new_atm_vols,
@@ -34,7 +34,7 @@ def plot_value_evolution(
     s_range,
 ):
     """Calls the portfolio's 3D value evolution plot and returns the figure."""
-    fig = portfolio.plot_value_evolution_3d(
+    fig = portfolio.plot_pnl_evolution_3d(
         vol_surface,
         new_atm_vols,
         new_skews,
