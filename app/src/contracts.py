@@ -1,4 +1,4 @@
-from py_vollib.black_scholes.greeks.analytical import delta, gamma, theta, vega
+from py_vollib.black_scholes.greeks.numerical import delta, gamma, theta, vega
 from py_vollib.black_scholes import black_scholes
 
 # Global risk-free rate

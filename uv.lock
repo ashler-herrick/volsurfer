@@ -685,6 +685,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pulp"
+version = "3.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/44/4d2ebd90b5f6f018f9443b597a290f8a5d245d0f2e775e8b7472f68d9929/pulp-3.0.2.tar.gz", hash = "sha256:7e57cd4eb145bdca80214acb07315f03583dd1c00cc8f24f91bf037649f93eb6", size = 17619975 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/98/ae/3f9ef06ae55d895fd621d6e5a30eb4ad4f2f3d0fcf8c5e2dd5df5f4a1cc5/PuLP-3.0.2-py3-none-any.whl", hash = "sha256:327ba7a0d33cb7d4330005eed2b58f0d19391ca96d15f6546fe3621eb86ce341", size = 17690738 },
+]
+
+[[package]]
 name = "py-lets-be-rational"
 version = "1.0.3"
 source = { git = "https://github.com/vollib/py_lets_be_rational.git#b85a0d87fe2ba6d0525c76ee936999599deb39d7" }
@@ -1129,6 +1138,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
+    { name = "pulp" },
     { name = "py-lets-be-rational" },
     { name = "py-vollib" },
     { name = "pytest" },
@@ -1143,6 +1153,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.1" },
     { name = "numpy", specifier = ">=2.2.4" },
     { name = "pandas", specifier = ">=2.2.3" },
+    { name = "pulp", specifier = ">=3.0.2" },
     { name = "py-lets-be-rational", git = "https://github.com/vollib/py_lets_be_rational.git" },
     { name = "py-vollib", git = "https://github.com/vollib/py_vollib.git" },
     { name = "pytest", specifier = ">=8.3.5" },

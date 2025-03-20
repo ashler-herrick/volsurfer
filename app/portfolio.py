@@ -31,7 +31,7 @@ def plot_value_evolution(
     new_kurtosis,
     elapsed_time,
     timesteps,
-    S_range,
+    s_range,
 ):
     """Calls the portfolio's 3D value evolution plot and returns the figure."""
     fig = portfolio.plot_value_evolution_3d(
@@ -41,7 +41,7 @@ def plot_value_evolution(
         new_kurtosis,
         elapsed_time,
         timesteps,
-        S_range,
+        s_range,
     )
     return fig
 
@@ -54,7 +54,7 @@ def plot_all_greeks(
     new_kurtosis,
     elapsed_time,
     timesteps,
-    S_range,
+    s_range,
 ):
     """Plot 3D evolution of delta, gamma, theta, vega, one after another."""
     figs = {}
@@ -66,7 +66,7 @@ def plot_all_greeks(
             new_kurtosis,
             elapsed_time,
             timesteps,
-            S_range,
+            s_range,
             greek_name,
         )
     return figs

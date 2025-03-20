@@ -30,13 +30,13 @@ class Portfolio:
         """
         return sum([opt.price(vol_surface) for opt in self.options])
 
-    def plot_greeks(self, vol_surface: VolSurface, S_range: np.ndarray):
+    def plot_greeks(self, vol_surface: VolSurface, s_range: np.ndarray):
         """
         Plot the portfolio Greeks (delta, gamma, theta, vega) as the underlying price varies.
         """
         delta_vals, gamma_vals, theta_vals, vega_vals = [], [], [], []
         original_price = self.stock.price
-        for S in S_range:
+        for S in s_range:
             self.stock.price = S
             g = self.portfolio_greeks(vol_surface)
             delta_vals.append(g["delta"])
@@ -47,19 +47,19 @@ class Portfolio:
         self.stock.price = original_price
 
         fig, axs = plt.subplots(2, 2, figsize=(12, 10))
-        axs[0, 0].plot(S_range, delta_vals, marker="o")
+        axs[0, 0].plot(s_range, delta_vals, marker="o")
         axs[0, 0].set_title("Portfolio Delta")
         axs[0, 0].grid(True)
 
-        axs[0, 1].plot(S_range, gamma_vals, marker="o", color="tab:orange")
+        axs[0, 1].plot(s_range, gamma_vals, marker="o", color="tab:orange")
         axs[0, 1].set_title("Portfolio Gamma")
         axs[0, 1].grid(True)
 
-        axs[1, 0].plot(S_range, theta_vals, marker="o", color="tab:green")
+        axs[1, 0].plot(s_range, theta_vals, marker="o", color="tab:green")
         axs[1, 0].set_title("Portfolio Theta")
         axs[1, 0].grid(True)
 
-        axs[1, 1].plot(S_range, vega_vals, marker="o", color="tab:red")
+        axs[1, 1].plot(s_range, vega_vals, marker="o", color="tab:red")
         axs[1, 1].set_title("Portfolio Vega")
         axs[1, 1].grid(True)
 
@@ -132,13 +132,13 @@ class Portfolio:
         new_kurtosis: List[float],
         elapsed_time: float,
         timesteps: int,
-        S_range: np.ndarray,
+        s_range: np.ndarray,
     ):
         # Create a matrix to store portfolio values:
-        evolution_matrix = np.zeros((len(S_range), timesteps))
+        evolution_matrix = np.zeros((len(s_range), timesteps))
         original_price = self.stock.price
 
-        for i, S in enumerate(S_range):
+        for i, S in enumerate(s_range):
             self.stock.price = S
             values = []
             # Use the generator version of evolve_portfolio which yields a new portfolio and evolved vol surface at each step.
@@ -157,7 +157,7 @@ class Portfolio:
 
         time_axis = np.linspace(0, elapsed_time, timesteps)
         # Create meshgrid with X as underlying price and Y as time (days)
-        S_mesh, T = np.meshgrid(S_range, time_axis)
+        S_mesh, T = np.meshgrid(s_range, time_axis)
         evolution_matrix_T = (
             evolution_matrix.T
         )  # Transpose to match meshgrid dimensions
@@ -184,7 +184,7 @@ class Portfolio:
         new_kurtosis: List[float],
         elapsed_time: float,
         timesteps: int,
-        S_range: np.ndarray,
+        s_range: np.ndarray,
         greek: str,
     ):
         """
@@ -195,10 +195,10 @@ class Portfolio:
         """
         # Create a matrix to store greek values:
         # Rows: each underlying price; Columns: each time step.
-        evolution_matrix = np.zeros((len(S_range), timesteps))
+        evolution_matrix = np.zeros((len(s_range), timesteps))
         original_price = self.stock.price
 
-        for i, S in enumerate(S_range):
+        for i, S in enumerate(s_range):
             self.stock.price = S
             greek_values = []
             # Use the generator version of evolve_portfolio which yields a new portfolio and evolved vol surface at each step.
@@ -218,7 +218,7 @@ class Portfolio:
 
         time_axis = np.linspace(0, elapsed_time, timesteps)
         # Create meshgrid with X as underlying price and Y as time (days)
-        S_mesh, T = np.meshgrid(S_range, time_axis)
+        S_mesh, T = np.meshgrid(s_range, time_axis)
         evolution_matrix_T = (
             evolution_matrix.T
         )  # Transpose to match meshgrid dimensions
