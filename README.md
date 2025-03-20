@@ -17,7 +17,7 @@ This app is designed to be a fun and interactive tool for researching how **impl
 The exact formula used to compute the implied volatility is:
 
 $$
-\sigma_{atm} + s(m - 1) + k(m - 1)^2
+\sigma_{m} = \sigma_{atm} + s(m - 1) + k(m - 1)^2
 $$
 
 where:
