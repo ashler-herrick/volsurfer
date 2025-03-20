@@ -1,7 +1,10 @@
+import os
+
 import streamlit as st
 
 st.title("Vol Surfer - An Options Calculator")
-st.image(r"app\assets\logo.png")
+logo_path = os.path.join("app", "assets", "logo.png")
+st.image(logo_path)
 
 st.markdown(
     """

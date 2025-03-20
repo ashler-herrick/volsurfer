@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 import numpy as np
 
@@ -7,7 +9,8 @@ from src.vol_surface import VolSurface
 
 st.set_page_config(layout="centered")
 st.title("Vol Surfer - An Options Calculator")
-st.image(r"app\assets\logo.png")
+logo_path = os.path.join("app", "assets", "logo.png")
+st.image(logo_path)
 
 # --- Vol Surface & Simulation Params ---
 st.title("Vol Surface and Simulation Parameters")
