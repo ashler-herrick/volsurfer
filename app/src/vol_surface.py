@@ -72,14 +72,14 @@ class VolSurface:
 
         fig = plt.figure(figsize=(8, 6), dpi=128)
         ax = cast(Axes3D, fig.add_subplot(111, projection="3d"))
-        surf = ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor="gray", alpha=0.6)
+        surf = ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor="none", alpha=0.8)
         ax.set_xlabel("Strike")
         ax.set_ylabel("DTE")
         ax.set_zlabel("Implied Volatility")
         ax.set_title("Volatility Surface")
 
         ax.set_zlim(bottom=0, top=np.max(Z) + 0.5)
-        ax.view_init(elev=30, azim=-45)
+        ax.view_init(elev=15, azim=-60)
 
         fig.colorbar(surf, shrink=0.5, aspect=5)
         return fig

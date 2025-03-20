@@ -48,9 +48,6 @@ if plot_value_btn:
         skews=st.session_state["skews"],
         kurtosis=st.session_state["kurtosis"],
     )
-    st.text(
-        f"Portfolio Initial Value: {round(portfolio.portfolio_value(vol_surface), 6)}"
-    )
     st.header("3D Portfolio Evolution: PnL")
     fig = plot_pnl_evolution(
         portfolio=portfolio,

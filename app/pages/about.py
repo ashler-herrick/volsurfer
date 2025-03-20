@@ -39,10 +39,21 @@ st.markdown(
 
     ### **Option Chain**
     The Option Chain page constructs an option chain for you to build a hypothetical portfolio. 
-    Simply select the options to include in your portfolio, scroll down to the "Selected Options" 
-    level to input the amount of contracts to add to your portfolio. 
+    Simply select the options to include in your portfolio, then scroll down to the **Selected Options** 
+    section to input the number of contracts you want to add. The option chain dynamically updates based on 
+    the expiration dates and strike prices selected. 
+
+    Once you have selected your options and set the contract quantities, the portfolio is constructed using 
+    the chosen positions. These selections will be used in subsequent pages to analyze portfolio performance 
+    and risk metrics.
 
     ### **Payoff and Greeks**
-    Once on the Payoff and Greeks page, you can 
+    The Payoff and Greeks page allows you to analyze the financial impact of your portfolio over time. 
+    Here, you can plot the evolution of the portfolio's **profit and loss (PnL)**, as well as track key risk metrics.
+
+    - **Payoff Analysis**: Displays how the portfolio's value changes under different underlying price scenarios.
+    - **Greeks Visualization**: Examines how **delta, gamma, theta, vega, and rho** evolve over time, as well as how they respond to changes in the underlying asset price and implied volatility.
+    - **Scenario Testing**: If volatility surface evolution parameters are specified, the app simulates how changes in volatility, skew, and kurtosis affect the portfolio over time.
+
     """
 )
